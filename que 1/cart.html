@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href=".\index.css">
+</head>
+<body>
+    <div id="cart-container">
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <p>Total Price: <span id="total-price">0</span></p>
+    </div>
+    
+</body>
+<script src="script.js"></script> <!-- Link to your JavaScript file -->
+    <script>
+        // JavaScript code to handle cart functionality
+        let cart = [];
+        let totalPrice = 0;
+
+        function addToCart(productId) {
+            const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+            const productName = productCard.querySelector('h3').innerText;
+            const productPrice = parseFloat(productCard.querySelector('.product-price').innerText);
+
+            // Check if the product is already in the cart
+            const existingProductIndex = cart.findIndex(item => item.id === productId);
+            if (existingProductIndex >= 0) {
+                cart[existingProductIndex].quantity += 1; // Increase quantity
+            } else {
+                cart.push({ id: productId, name: productName, price: productPrice, quantity: 1 }); // Add new product
+            }
+
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = ''; // Clear current cart items
+
+            totalPrice = 0; // Reset total price
+
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.innerText = `${item.name} - Quantity: ${item.quantity} - Price: ${item.price * item.quantity}`;
+                cartItemsContainer.appendChild(itemElement);
+                totalPrice += item.price * item.quantity; // Calculate total price
+            });
+
+            document.getElementById('total-price').innerText = totalPrice.toFixed(2); // Update total price
+        }
+    </script>
+</html>
